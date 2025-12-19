@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coinfield Expo | Official Access</title>
+<meta name="description" content="Gain official access to Coinfield Expo and view the event program.">
+<meta name="author" content="Coinfield Expo">
+<link rel="icon" href="favicon.ico">
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+:root {
+  --primary: #2563eb;
+  --gradient: linear-gradient(135deg,#3b82f6,#1d4ed8);
+  --bg-dark: #020617;
+  --bg-soft: rgba(2,6,23,0.85);
+  --text-light: #e5e7eb;
+  --text-muted: #94a3b8;
+  --shadow: rgba(0,0,0,0.65);
+  --transition: 0.5s ease-in-out;
+  --glow: rgba(59,130,246,0.45);
+}
+
+* { box-sizing: border-box; margin:0; padding:0; }
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: radial-gradient(circle at top, #0f172a, #020617 70%);
+  color: var(--text-light);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: visible;
+}
+
+/* Particle canvas */
+#particles {
+  position: fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  z-index:0;
+}
+
+main { width:100%; max-width:700px; padding:20px; position: relative; z-index:1; }
+
+.card {
+  background: var(--bg-soft);
+  backdrop-filter: blur(16px);
+  border-radius: 20px;
+  padding: 50px 40px;
+  box-shadow: 0 0 60px var(--glow), 0 40px 80px var(--shadow), inset 0 0 0 1px rgba(255,255,255,0.03);
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow 0.5s ease;
+}
+.card:hover { box-shadow: 0 0 100px var(--glow), 0 40px 80px var(--shadow), inset 0 0 0 1px rgba(255,255,255,0.03); }
+
+/* Animated heading and form */
+#access h1, #access p, #emailForm {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: slideFadeIn 1s forwards;
+}
+#access p { animation-delay: 0.3s; }
+#emailForm { animation-delay: 0.6s; }
+
+@keyframes slideFadeIn {
+  to { opacity:1; transform: translateY(0); }
+}
+
+h1 { text-align:center; font-size:32px; margin-bottom:14px; font-weight:600; }
+p { text-align:center; font-size:16px; line-height:1.65; color: var(--text-muted); margin-bottom:36px; max-width:500px; margin-left:auto;margin-right:auto; }
+
+form input {
+  width:100%; padding:18px 16px; margin-bottom:20px;
+  border-radius:10px; border:1px solid rgba(255,255,255,0.08);
+  background: var(--bg-dark); color: var(--text-light); font-size:16px; outline:none;
+  transition:border 0.25s ease, box-shadow 0.3s ease;
+}
+input:focus { border-color: var(--primary); box-shadow:0 0 15px var(--primary); }
+
+form button {
+  width:100%; padding:18px; border:none; border-radius:10px;
+  background: var(--gradient); color:white; font-weight:600; cursor:pointer;
+  font-size:16px; transition:transform 0.2s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 20px var(--glow);
+}
+form button:hover { transform:translateY(-2px); box-shadow:0 0 35px var(--glow); }
+
+section { display:none; opacity:0; transition:opacity var(--transition); }
+.active { display:block; opacity:1; }
+
+.program img {
+  width:100%; border-radius:14px; box-shadow:0 30px 60px rgba(0,0,0,0.7); margin-top:26px;
+}
+
+/* Overlay */
+.overlay {
+  position:absolute; top:0; left:0; width:100%; height:100%;
+  background: rgba(0,0,0,0.8);
+  display:flex; flex-direction:column; justify-content:center; align-items:center;
+  color:white; font-size:22px; text-align:center;
+  border-radius:20px; opacity:0; pointer-events:none;
+  transition:opacity 0.5s ease;
+  z-index:10;
+  padding:20px;
+}
+.overlay.show { opacity:1; pointer-events:auto; }
+
+@media(max-width:700px){ .card{padding:40px 30px;} h1{font-size:28px;} }
+</style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+
+<main>
+  <div class="card">
+
+    <!-- ACCESS -->
+    <section id="access" class="active">
+      <h1>Welcome to Coinfield Expo</h1>
+      <p>The premier industry event of the year</p>
+      <p class="cred">Attended by leading innovators, industry experts, and global brands.</p>
+      <p>Gain access to the program.</p>
+      <form id="emailForm" onsubmit="submitForm(event)">
+        <input type="email" name="entry.131325416" placeholder="Email address" required>
+        <button type="submit">Continue</button>
+      </form>
+    </section>
+
+    <!-- CONFIRMATION OVERLAY -->
+    <div id="overlay" class="overlay">
+      <p>Access confirmed. Prepare for an unforgettable experience at Coinfield Expo!</p>
+    </div>
+
+    <!-- PROGRAM IMAGE -->
+    <section id="program" class="program">
+      <img src="./order-of-event.jpg" alt="Coinfield Expo Program">
+    </section>
+
+  </div>
+</main>
+
+<script>
+// Form submission to Google Form
+function submitForm(e){
+  e.preventDefault();
+  const form = e.target;
+  const data = new FormData(form);
+
+  fetch("https://docs.google.com/forms/d/e/1FAIpQLSdKhjIu-9vZS5TydKB15I4GiqQrq_A6s5j8I3lnqx4jgovReg/formResponse", {
+    method: "POST",
+    mode: "no-cors",
+    body: data
+  });
+
+  // success overlay (assume success because Google blocks response)
+  const overlay = document.getElementById('overlay');
+  overlay.classList.add('show');
+
+  setTimeout(() => {
+    overlay.classList.remove('show');
+    document.getElementById('access').classList.remove('active');
+    document.getElementById('program').classList.add('active');
+    form.reset();
+  }, 2000);
+}
+
+// Particle background
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let width = canvas.width = window.innerWidth;
+let height = canvas.height = window.innerHeight;
+
+window.addEventListener('resize', ()=>{ width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; });
+
+const particles = [];
+const numParticles = 80;
+for(let i=0;i<numParticles;i++){
+  particles.push({
+    x: Math.random()*width,
+    y: Math.random()*height,
+    r: Math.random()*2 + 1,
+    dx: (Math.random()-0.5)*0.5,
+    dy: (Math.random()-0.5)*0.5
+  });
+}
+
+function animate(){
+  ctx.clearRect(0,0,width,height);
+  particles.forEach(p=>{
+    p.x += p.dx;
+    p.y += p.dy;
+    if(p.x<0 || p.x>width) p.dx*=-1;
+    if(p.y<0 || p.y>height) p.dy*=-1;
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle='rgba(255,255,255,0.2)';
+    ctx.fill();
+  });
+  requestAnimationFrame(animate);
+}
+animate();
+</script>
+
+</body>
+</html>
